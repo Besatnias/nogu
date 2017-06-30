@@ -46,7 +46,6 @@ bot.onText(/^\//, msg => {
         tra2(msg);
     else if(msg.text.match(/^\/trans(?:@(?:nogubot|mujabot|elmejorrobot))?/))
         tra1(msg);
-
 });
 
 bot.on('message', msg=>{
