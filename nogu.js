@@ -12,7 +12,6 @@ const fs = require('fs'),
     request = require('request'),
     translate = require('node-google-translate-skidz'),
     cheerio = require('cheerio'),
-    phantom = require('phantom'),
     rp = require('request-promise'),
 //Twitter module
     Twitter = require('twitter'),
@@ -46,6 +45,7 @@ bot.onText(/^\//, msg => {
         tra2(msg);
     else if(msg.text.match(/^\/trans(?:@(?:nogubot|mujabot|elmejorrobot))?/))
         tra1(msg);
+
 });
 
 bot.on('message', msg=>{
@@ -866,3 +866,21 @@ bot.onText(/^\/quitar(?:@(?:nogubot|mujabot|elmejorrobot))? ([\s\S]+)/, (msg, ma
         })
     }
 });
+
+bot.on('inline_query', msg=>{
+    // console.log(msg)
+    if (db.tags.taggers.includes(msg.from.id)) {
+        const text = `${db.tags.tagged.join(" ")}\n\n${msg.query}`
+        console.log(text)
+        const id = msg.id;
+        const results = [{
+            type: "article",
+            id: String(Math.floor(Math.random() * 100000)),
+            title: "Clic aquí para enviar",
+            input_message_content: {
+                message_text: text
+            }
+        }]
+        bot.answerInlineQuery(id, results)
+    }
+})

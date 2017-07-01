@@ -1,0 +1,42 @@
+{
+  "name": "nogubot",
+  "version": "1.0.0",
+  "description": "Nogu!",
+  "main": "main.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/besatnias/nogubot.git"
+  },
+  "keywords": [
+    "nogu",
+    "nogubot",
+    "bot",
+    "telegram",
+    "node",
+    "nodejs"
+  ],
+  "author": "Besto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/besatnias/nogubot/issues"
+  },
+  "homepage": "https://github.com/besatnias/nogubot#readme",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "cron": "^1.2.1",
+    "fs": "0.0.1-security",
+    "image-downloader": "^2.0.1",
+    "mongoose": "^4.6.8",
+    "node-google-translate-skidz": "^1.1.0",
+    "node-telegram-bot-api": "^0.24.0",
+    "phantom": "^3.2.1",
+    "request": "^2.78.0",
+    "telebotframework": "^0.11.1",
+    "tgfancy": "^0.4.0",
+    "twitter": "^1.7.0",
+    "underscore": "^1.8.3"
+  }
+}
