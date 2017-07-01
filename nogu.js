@@ -878,7 +878,8 @@ bot.on('inline_query', msg=>{
             id: String(Math.floor(Math.random() * 100000)),
             title: "Clic aquí para enviar",
             input_message_content: {
-                message_text: text
+                message_text: text,
+                parse_mode: "HTML"
             }
         }]
         bot.answerInlineQuery(id, results)
