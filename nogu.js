@@ -868,9 +868,8 @@ bot.onText(/^\/quitar(?:@(?:nogubot|mujabot|elmejorrobot))? ([\s\S]+)/, (msg, ma
 });
 
 bot.on('inline_query', msg=>{
-    // console.log(msg)
     if (db.tags.taggers.includes(msg.from.id)) {
-        const text = `${db.tags.tagged.join(" ")}\n\n${msg.query}`
+        const text = `${db.tags.tagged.join(" ")}\n\n${msg.query}\n\n#Pornibujito`
         console.log(text)
         const id = msg.id;
         const results = [{
