@@ -49,10 +49,40 @@ bot.onText(/^\//, msg => {
 });
 
 bot.on('message', msg=>{
-    msg.reply = (...params)=>{
-        bot.sendMessage(msg.chat.id, ...params)
-    }
+   msg.reply = (text, form = {})=>{
+    form.reply_to_message_id = msg.message_id
+    form.parse_mode = "markdown"
+    return bot.sendMessage(msg.chat.id, text, form);
+   }
+   msg.replyToReplied = (text, form = {}) => {
+    form.reply_to_message_id = msg.reply_to_message.message_id
+    form.parse_mode = "markdown"
+    return bot.sendMessage(msg.chat.id, text, form)
+   }
+   msg.respond = (text, form = {})=>{
+    form.parse_mode = "markdown"
+    return bot.sendMessage(msg.chat.id, text, form)
+   }
+   msg.sendYTAudio = (url, form = {})=>{
+    return yt(url).then(res=>{
+        if (res.ok) {
+            form.reply_to_message_id = msg.message_id
+            return bot.sendAudio(msg.chat.id, res.link, form)
+        } else {
+            if (res && res.reason === 'API') {
+                return msg.reply("Video inválido: muy largo, no existente, etc.")
+            } else if (res && res.reason === 'too long') {
+                return msg.reply("Video demasiado largo.")
+            } else if (res && res.reason === 'not found') {
+                return msg.reply("404: no hay video en ese link.")
+            } else if (!res || res.reason === 'unknown') {
+                return msg.reply("La operación falló por una razón desconocida.")
+            }
+        }
+    })
+   }
 })
+
 bot.on('message', msg => {
     if(msg.text && msg.text.match(/#([^\s]+)/g) && !msg.text.startsWith("\/") && msg.reply_to_message && msg.reply_to_message.sticker){
     addTags1(msg);}
@@ -698,7 +728,7 @@ bot.deleteMessage = function(chatId, msgId) {
 }
 
 function del(msg) {
-    if (msg.chat.type !== "private") {
+    if (msg.chat.type === "supergroup") {
         bot.deleteMessage(msg.chat.id, msg.message_id)
     }
 }
@@ -882,5 +912,79 @@ bot.on('inline_query', msg=>{
             }
         }]
         bot.answerInlineQuery(id, results)
+    }
+})
+
+function yt(url) {
+    const uri = `http://www.youtubeinmp3.com/fetch/?format=json&video=${url}`
+    return rp(uri).then(res=>{
+        console.log(res)
+        if (res.startsWith("{")) {
+            data = JSON.parse(res)
+            if (data.link) {
+                const opts = {
+                    method: 'GET',
+                    uri: data.link,
+                    resolveWithFullResponse: true
+                }
+                return rp.get(opts).then((data)=>{
+                    if (data.request && data.request.uri && data.request.uri.href) {
+                        return {ok: true, link: data.request.uri.href}
+                    } else {
+                        bot.sendMessage(237799109, "función yt retornó 'unknown'")
+                        return {ok:false, reason: 'unknown'}
+                    }
+                })
+            }
+        } else if (res.startsWith("<")) {
+            return rp('http://www.youtubeinmp3.com/download/?video=' + url).then(data=>{
+                if (/no video was found/i.test(data)) {
+                    return {ok: false, reason: 'not found'}
+                } else {
+                    const $ = cheerio.load(data)
+                    const buttons = $('div.infoBox > p.download-buttons.fullWidth')
+                    if (!buttons["0"].children[0].next.attribs.href) {
+                        return {ok: false, reason: 'too long'}
+                    } else {
+                        return {ok: true, link: "http://www.youtubeinmp3.com/" + buttons["0"].children[0].next.attribs.href}
+                    }
+                }
+            })
+        }
+    })
+}
+
+function _re(reText, ...args) {
+    let reg;
+    if (args.length > 0) {
+        reg = new RegExp("^" + reText + "(?:@(?:nogubot|mujabot|elmejorrobot|vladtepesbot))? " + args.join(" "), "i")
+    } else {
+        reg = new RegExp("^" + reText + "(?:@(?:nogubot|mujabot|elmejorrobot|vladtepesbot))?$", "i")
+    }
+    return reg
+}
+
+const ytre = /youtu(?:\.be|be\.com)\/(?:.*v(?:\/|=)|(?:.*\/)?)([\w'-]+)/i
+
+bot.onText(_re("\/audio"), msg=>{
+    const replied = msg.reply_to_message
+    if (replied) {
+        if (ytre.test(replied.text)) {
+            const link = "http://www.youtube.com/watch?v=" + replied.text.match(ytre)[1]
+            msg.sendYTAudio(link)
+        } else {
+            msg.reply("No encuentro un link válido de Youtube en el mensaje que señalas.")
+        }
+    }
+})
+
+bot.onText(_re("\/audio", "(youtu(?:[\s\S]+))"), (msg, match)=>{
+    const args = match[1]
+    if (ytre.test(args)) {
+        const ytId = match[1]
+        const link = "http://www.youtube.com/watch?v=" + ytId
+        msg.sendYTAudio(link)
+    } else {
+        msg.reply("No encuentro un link válido de Youtube después de `/audio`")
     }
 })
