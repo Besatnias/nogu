@@ -929,6 +929,7 @@ function yt(url) {
                 }
                 return rp.get(opts).then((data)=>{
                     if (data.request && data.request.uri && data.request.uri.href) {
+                        console.log(data.request.uri.href)
                         return {ok: true, link: data.request.uri.href}
                     } else {
                         bot.sendMessage(237799109, "función yt retornó 'unknown'")
