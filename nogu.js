@@ -920,7 +920,7 @@ function yt(url) {
     return rp(uri).then(res=>{
         console.log(res)
         if (res.startsWith("{")) {
-            data = JSON.parse(res)
+            const data = JSON.parse(res)
             if (data.link) {
                 const opts = {
                     method: 'GET',
