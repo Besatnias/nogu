@@ -804,7 +804,7 @@ function sendUrl(chatId, url) {
     }
 }
 
-bot.onText(/^\/math(?:@(?:nogubot|mujabot|elmejorrobot))? ([\s\S]+)/gi, (msg, match)=>{
+bot.onText(/^\/math(?:@(?:nogubot|mujabot|elmejorrobot))? ([\s\S]+)/i, (msg, match)=>{
     const result = math.eval(match[1])
     const text = `Operation:
 <code>${match[1]}<\/code>
