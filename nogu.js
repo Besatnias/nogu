@@ -1036,7 +1036,9 @@ bot.onText(/^\/catfact(?:@\w+)?$/, msg=>{
 })
 
 bot.onText(/\b(?:miau|meow|miaumiau)\b/i, msg=>{
-    msg.meow()
+    if (!(/puerto/i.test(msg.text))) {
+        msg.meow()
+    }
 })
 
 function doge(msg) {
@@ -1105,4 +1107,8 @@ bot.onText(_re("id"), msg=>{
     if(rp && rp.sticker) {
         msg.reply("`" + rp.sticker.file_id + "`")
     }
+})
+
+bot.onText(/^>colony$/, msg=>{
+    msg.reply(">Puerto Rico")
 })
