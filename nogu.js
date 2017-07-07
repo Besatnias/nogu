@@ -5,7 +5,7 @@ const fs = require('fs'),
     secrets = fs.readFileSync("secrets"),
     vars = JSON.parse(secrets),
     db = JSON.parse(fs.readFileSync("shittydb")),
-    token = vars.telegram.bot.nogu,
+    token = vars.telegram.bot.muja,
     Tgfancy = require('tgfancy'),
     bot = new Tgfancy(token, { polling: true }),
 // HTTP modules
@@ -310,25 +310,6 @@ function help(msg) {
 }
 
 // Miscellaneous stuff
-function doge(msg) {
-    let cualDoge = [
-        'BQADAQADmwIAAmczbQpYL0n24ELb8wI',
-        'BQADBAADiwEAAljp-gOQagmTpQABMr8C',
-        'BQADAgADTwADNraOCO6Evpsh_B78Ag',
-        'BQADBAADeQEAAljp-gMfLjGh0UcsqgI',
-        'BQADBAADrwEAAljp-gOUGQERkzLDSAI',
-        'BQADBAADpwEA Aljp-gMZqYA2TcCQigI',
-        'BQADAgADKAADNraOCCqXlVqUKd4SAg',
-        'BQADAgADHAADNraOCLBipsm-lf2XAg',
-        'BQADAgADCgADNraOCEl_Jsv8JOo9Ag',
-        'BQADBAADlQEAAljp-gNqbe1l60dGtAI',
-        'BQADBAADmQEAAljp-gMzkzYmzu3eyAI',
-        'BQADBAADfQEAAljp-gORGeHcXUkb-wI'
-    ];
-    let elDoge = cualDoge[Math.floor(Math.random() * 12)];
-    bot.sendSticker(msg.chat.id, elDoge);
-}
-
 function repite(msg) {
     console.log('Action log: Repeated a message');
     let text = msg.text.substring(msg.entities[0].length + 1);
@@ -1030,4 +1011,81 @@ bot.onText(/(?:https?\.?)?twitter\.com\/[\S\/]+\/status\/([0-9]+)/gi, (msg, matc
             console.log('error getting statuses looking for video')
         }
     })
+})
+
+fs.readFile('catstuff.json', (err, data)=>{
+    if (err) console.log(err)
+    else {
+        let obj = JSON.parse(data)
+        bot.faces = obj.faces
+        bot.facts = obj.facts
+    }
+})
+
+bot.on('message', msg=>{
+    msg.sendFact = function(){
+        bot.sendMessage(msg.chat.id, bot.facts[_.random(0, bot.facts.length)] + "\n\n" + bot.faces[_.random(0, bot.faces.length)])
+    }
+    msg.meow = function() {
+        bot.sendMessage(msg.chat.id, "Meow! " + bot.faces[_.random(0, bot.faces.length)])
+    }
+})
+
+bot.onText(/^\/catfact(?:@\w+)?$/, msg=>{
+    msg.sendFact()
+})
+
+bot.onText(/\b(?:miau|meow|miaumiau)\b/, msg=>{
+    msg.meow()
+})
+
+function doge(msg) {
+    let cualDoge = [
+        'BQADAQADmwIAAmczbQpYL0n24ELb8wI',
+        'BQADBAADiwEAAljp-gOQagmTpQABMr8C',
+        'BQADAgADTwADNraOCO6Evpsh_B78Ag',
+        'BQADBAADeQEAAljp-gMfLjGh0UcsqgI',
+        'BQADBAADrwEAAljp-gOUGQERkzLDSAI',
+        'BQADBAADpwEA Aljp-gMZqYA2TcCQigI',
+        'BQADAgADKAADNraOCCqXlVqUKd4SAg',
+        'BQADAgADHAADNraOCLBipsm-lf2XAg',
+        'BQADAgADCgADNraOCEl_Jsv8JOo9Ag',
+        'BQADBAADlQEAAljp-gNqbe1l60dGtAI',
+        'BQADBAADmQEAAljp-gMzkzYmzu3eyAI',
+        'BQADBAADfQEAAljp-gORGeHcXUkb-wI'
+    ];
+    let elDoge = db.doges[Math.floor(Math.random() * db.doges.length)];
+    bot.sendSticker(msg.chat.id, elDoge);
+}
+
+bot.onText(_re("\/newdoge"), msg=>{
+    if(msg.from.id === 237799109) {
+        const rp = msg.reply_to_message
+        if(rp && rp.sticker && !db.doges.includes(rp.sticker.file_id)) {
+            db.doges.push(rp.sticker.file_id)
+            fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
+                if (!e) {
+                    msg.reply('New doge added!')
+                } else {
+                    console.log(e)
+                }
+            })
+        }
+    }
+})
+
+bot.onText(_re("\/deletedoge"), msg=>{
+    if(msg.from.id === 237799109) {
+        const rp = msg.reply_to_message
+        if(rp && rp.sticker && db.doges.includes(rp.sticker.file_id)) {
+            db.doges.splice(db.doges[db.doges.indexOf(rp.sticker.file_id)], 1)
+            fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
+                if (!e) {
+                    msg.reply('Doge deleted.')
+                } else {
+                    console.log(e)
+                }
+            })
+        }
+    }  
 })
