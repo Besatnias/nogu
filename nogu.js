@@ -989,3 +989,45 @@ bot.onText(_re("\/audio", "(youtu(?:[\s\S]+))"), (msg, match)=>{
         msg.reply("No encuentro un link válido de Youtube después de `/audio`")
     }
 })
+
+bot.onText(/(?:https?\.?)?twitter\.com\/[\S\/]+\/status\/([0-9]+)/gi, (msg, match) =>{
+    tuser.get('statuses/lookup', {id: match[1]}, (e, t, r)=>{
+        if (!e) {
+            if (t[0]
+                && t[0].extended_entities
+                && t[0].extended_entities.media
+                && t[0].extended_entities.media[0].video_info
+                && t[0].extended_entities.media[0].video_info.variants[2]
+                && t[0].extended_entities.media[0].video_info.variants[2].url
+                && t[0].extended_entities.media[0].video_info.variants[2].url.endsWith('m3u8')
+            ) {
+                const sendonto = t[0].extended_entities.media[0].video_info.variants[1].url
+                bot.sendVideo(msg.chat.id, sendonto, {reply_to_message_id: msg.message_id})
+            } else if (t[0]
+                && t[0].extended_entities
+                && t[0].extended_entities.media
+                && t[0].extended_entities.media[0].video_info
+                && t[0].extended_entities.media[0].video_info.variants[2]
+                && t[0].extended_entities.media[0].video_info.variants[2].url.endsWith('mp4')
+            ) {
+                const sendonto = t[0].extended_entities.media[0].video_info.variants[2].url
+                bot.sendVideo(msg.chat.id, sendonto, {reply_to_message_id: msg.message_id})
+            } else if (t[0]
+                && t[0].extended_entities
+                && t[0].extended_entities.media
+                && t[0].extended_entities.media[0].video_info
+                && t[0].extended_entities.media[0].video_info.variants[0]
+                && t[0].extended_entities.media[0].video_info.variants[0].url
+            ) {
+                const sendonto = t[0].extended_entities.media[0].video_info.variants[0].url
+                bot.sendVideo(msg.chat.id, sendonto, {reply_to_message_id: msg.message_id})
+            }
+            // console.log(t[0].extended_entities.media[0].video_info.variants)
+            // bot.sendMessage(237799109, JSON.stringify(t[0], null, 2))
+            // bot.sendMessage(msg.chat.id, "couldn't find a video in this link", {reply_to_message_id: msg.message_id})
+            
+        } else {
+            console.log('error getting statuses looking for video')
+        }
+    })
+})
