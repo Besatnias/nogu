@@ -960,7 +960,7 @@ bot.onText(_re("\/audio"), msg=>{
     }
 })
 
-bot.onText(_re("\/audio", "(youtu(?:[\s\S]+))"), (msg, match)=>{
+bot.onText(_re("\/audio", ".+(youtu(?:[\s\S]+))"), (msg, match)=>{
     const args = match[1]
     if (ytre.test(args)) {
         const ytId = match[1]
