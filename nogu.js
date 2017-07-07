@@ -5,7 +5,7 @@ const fs = require('fs'),
     secrets = fs.readFileSync("secrets"),
     vars = JSON.parse(secrets),
     db = JSON.parse(fs.readFileSync("shittydb")),
-    token = vars.telegram.bot.muja,
+    token = vars.telegram.bot.nogu,
     Tgfancy = require('tgfancy'),
     bot = new Tgfancy(token, { polling: true }),
 // HTTP modules
