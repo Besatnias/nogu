@@ -1046,7 +1046,7 @@ function doge(msg) {
         'BQADAgADTwADNraOCO6Evpsh_B78Ag',
         'BQADBAADeQEAAljp-gMfLjGh0UcsqgI',
         'BQADBAADrwEAAljp-gOUGQERkzLDSAI',
-        'BQADBAADpwEA Aljp-gMZqYA2TcCQigI',
+        'BQADBAADpwEAAljp-gMZqYA2TcCQigI',
         'BQADAgADKAADNraOCCqXlVqUKd4SAg',
         'BQADAgADHAADNraOCLBipsm-lf2XAg',
         'BQADAgADCgADNraOCEl_Jsv8JOo9Ag',
@@ -1055,10 +1055,10 @@ function doge(msg) {
         'BQADBAADfQEAAljp-gORGeHcXUkb-wI'
     ];
     let elDoge = db.doges[Math.floor(Math.random() * db.doges.length)];
-    bot.sendSticker(msg.chat.id, elDoge);
+    bot.sendSticker(msg.chat.id, elDoge)
 }
 
-bot.onText(_re("\/newdoge"), msg=>{
+bot.onText(_re("new doge"), msg=>{
     if(msg.from.id === 237799109) {
         const rp = msg.reply_to_message
         if(rp && rp.sticker && !db.doges.includes(rp.sticker.file_id)) {
@@ -1074,7 +1074,7 @@ bot.onText(_re("\/newdoge"), msg=>{
     }
 })
 
-bot.onText(_re("\/deletedoge"), msg=>{
+bot.onText(_re("delete doge"), msg=>{
     if(msg.from.id === 237799109) {
         const rp = msg.reply_to_message
         if(rp && rp.sticker && db.doges.includes(rp.sticker.file_id)) {
@@ -1088,4 +1088,21 @@ bot.onText(_re("\/deletedoge"), msg=>{
             })
         }
     }  
+})
+
+bot.onText(_re("sticker", "(.+)"), (msg, match)=>{
+    bot.sendSticker(msg.chat.id, match[1]).catch(err=>{
+        if (/file_id/.test(err)) {
+            msg.reply("Invalid sticker id")
+        } else {
+            console.log(err)
+        }
+    })
+})
+
+bot.onText(_re("id"), msg=>{
+    const rp = msg.reply_to_message
+    if(rp && rp.sticker) {
+        msg.reply("`" + rp.sticker.file_id + "`")
+    }
 })
