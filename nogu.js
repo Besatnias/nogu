@@ -1035,7 +1035,7 @@ bot.onText(/^\/catfact(?:@\w+)?$/, msg=>{
     msg.sendFact()
 })
 
-bot.onText(/\b(?:miau|meow|miaumiau|)\b|^nyan$|^nya$/i, msg=>{
+bot.onText(/\b(?:miau|meow|miaumiau|)\b|(?:^nyan$|^nya$)/i, msg=>{
     if (!(/puerto/i.test(msg.text))) {
         msg.meow()
     }
