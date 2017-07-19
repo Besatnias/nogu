@@ -1035,27 +1035,13 @@ bot.onText(/^\/catfact(?:@\w+)?$/, msg=>{
     msg.sendFact()
 })
 
-bot.onText(/\b(?:miau|meow|miaumiau)\b/i, msg=>{
+bot.onText(/\b(?:miau|meow|miaumiau|)\b|^nyan$|^nya$/i, msg=>{
     if (!(/puerto/i.test(msg.text))) {
         msg.meow()
     }
 })
 
 function doge(msg) {
-    let cualDoge = [
-        'BQADAQADmwIAAmczbQpYL0n24ELb8wI',
-        'BQADBAADiwEAAljp-gOQagmTpQABMr8C',
-        'BQADAgADTwADNraOCO6Evpsh_B78Ag',
-        'BQADBAADeQEAAljp-gMfLjGh0UcsqgI',
-        'BQADBAADrwEAAljp-gOUGQERkzLDSAI',
-        'BQADBAADpwEAAljp-gMZqYA2TcCQigI',
-        'BQADAgADKAADNraOCCqXlVqUKd4SAg',
-        'BQADAgADHAADNraOCLBipsm-lf2XAg',
-        'BQADAgADCgADNraOCEl_Jsv8JOo9Ag',
-        'BQADBAADlQEAAljp-gNqbe1l60dGtAI',
-        'BQADBAADmQEAAljp-gMzkzYmzu3eyAI',
-        'BQADBAADfQEAAljp-gORGeHcXUkb-wI'
-    ];
     let elDoge = db.doges[Math.floor(Math.random() * db.doges.length)];
     bot.sendSticker(msg.chat.id, elDoge)
 }
@@ -1112,3 +1098,9 @@ bot.onText(_re("id"), msg=>{
 bot.onText(/^>colony$/, msg=>{
     msg.reply(">Puerto Rico")
 })
+
+bot.on('audio', msg=>{
+    if(msg.chat.id === -1001131654583) {
+        bot.forwardMessage('@jukeboxxxx', msg.chat.id, msg.message_id)
+    }
+});
