@@ -763,7 +763,7 @@ function chatId(thing) {
 }
 
 function sendUrl(chatId, url) {
-    if (/https?:\/\/(?:www|fat)?\.?gfycat.com\/(?:gifs\/detail\/)?(\w+)(?:$|\/$|\.webm$)?/.test(url)) {
+    if (/https?:\/\/(?:www|fat)?\.?gfycat.com\/(?:\/detail\/|gifs\/detail\/)?(\w+)(?:$|\/$|\.webm$)?/.test(url)) {
         const gfyId = url.match(/https?:\/\/(?:www|fat)?\.?gfycat.com\/(?:gifs\/detail\/)?(\w+)(?:$|\/$|\.webm$)?/)[1]
         url = `https://thumbs.gfycat.com/${gfyId}-mobile.mp4`
         console.log(url)
