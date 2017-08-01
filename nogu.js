@@ -1101,6 +1101,6 @@ bot.onText(/^>colony$/, msg=>{
 
 bot.on('audio', msg=>{
     if(msg.chat.id === -1001131654583) {
-        bot.forwardMessage('@jukeboxxxx', msg.chat.id, msg.message_id)
+        bot.forwardMessage(-1001127646272, msg.chat.id, msg.message_id)
     }
 });
