@@ -1106,8 +1106,8 @@ bot.on('audio', msg=>{
 });
 
 bot.onText(_re('nice song|music|bonita canción|música|good taste|buen gusto'), msg=>{
-    let rp
-    if (rp = msg.reply_to_message && rp.audio) {
+    let rp = msg.reply_to_message
+    if (rp && rp.audio) {
         bot.forwardMessage(-1001127646272, msg.chat.id, rp.message_id)
     }
 })
