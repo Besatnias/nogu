@@ -1046,7 +1046,7 @@ function doge(msg) {
     bot.sendSticker(msg.chat.id, elDoge)
 }
 
-bot.onText(_re("punishment"), msg=>{
+bot.onText(_re("/punishment"), msg=>{
     const punishment = db.punishments[Math.floor(Math.random() * db.punishments.length)];
     msg.reply(punishment)
 })
