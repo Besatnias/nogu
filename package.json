@@ -26,9 +26,11 @@
   "homepage": "https://github.com/besatnias/nogubot#readme",
   "dependencies": {
     "cheerio": "^0.22.0",
+    "comma-number": "^2.0.0",
     "cron": "^1.2.1",
     "fs": "0.0.1-security",
     "image-downloader": "^2.0.1",
+    "mathjs": "^3.16.1",
     "mongoose": "^4.6.8",
     "node-google-translate-skidz": "^1.1.0",
     "node-telegram-bot-api": "^0.24.0",
