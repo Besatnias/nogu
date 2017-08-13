@@ -1046,6 +1046,11 @@ function doge(msg) {
     bot.sendSticker(msg.chat.id, elDoge)
 }
 
+bot.onText(_re("punishment"), msg=>{
+    const punishment = db.punishments[Math.floor(Math.random() * db.punishments.length)];
+    msg.reply(punishment)
+})
+
 bot.onText(_re("new doge"), msg=>{
     if(msg.from.id === 237799109) {
         const rp = msg.reply_to_message
