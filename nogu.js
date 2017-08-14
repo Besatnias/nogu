@@ -1241,3 +1241,6 @@ bot.onText(_re("delete punisher"), msg=>{
     }  
 })
 
+bot.onText(_re("list punishments"), msg=>{
+    msg.respond(`\`${db.punishments.join("\n")}\``)
+})
