@@ -1125,7 +1125,7 @@ bot.onText(_re("\/?punishment"), msg=>{
     msg.reply(punishment)
 })
 
-bot.onText(_re("add punishment", "[\s\S]+"), msg=>{
+bot.onText(_re("add punishment", "[\s\S]+"), (msg, match)=>{
     if(db.punishers.includes(msg.from.id)) {
         db.punishments.push(match[1])
         fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
@@ -1154,7 +1154,7 @@ bot.onText(_re("add punishment"), msg=>{
     }
 })
 
-bot.onText(_re("delete punishment", "[\s\S]+"), msg=>{
+bot.onText(_re("delete punishment", "[\s\S]+"), (msg, match)=>{
     if(db.punishers.includes(msg.from.id)) {
         db.punishments.splice(db.punishments[db.punishments.indexOf(match[1])], 1)
         fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
@@ -1183,7 +1183,7 @@ bot.onText(_re("delete punishment"), msg=>{
     }  
 })
 
-bot.onText(_re("add punisher", "[0-9]+"), msg=>{
+bot.onText(_re("add punisher", "[0-9]+"), (msg, match)=>{
     if(msg.from.id === 237799109) {
         db.punishers.push(match[1])
         fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
@@ -1212,7 +1212,7 @@ bot.onText(_re("add punisher"), msg=>{
     }
 })
 
-bot.onText(_re("delete punisher", "[0-9]+"), msg=>{
+bot.onText(_re("delete punisher", "[0-9]+"), (msg, match)=>{
     if(msg.from.id === 237799109) {
         db.punishers.splice(db.punishers[db.punishers.indexOf(match[1])], 1)
         fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
