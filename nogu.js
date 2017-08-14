@@ -1046,12 +1046,7 @@ function doge(msg) {
     bot.sendSticker(msg.chat.id, elDoge)
 }
 
-bot.onText(_re("/punishment"), msg=>{
-    const punishment = db.punishments[Math.floor(Math.random() * db.punishments.length)];
-    msg.reply(punishment)
-})
-
-bot.onText(_re("new doge"), msg=>{
+bot.onText(_re("add doge"), msg=>{
     if(msg.from.id === 237799109) {
         const rp = msg.reply_to_message
         if(rp && rp.sticker && !db.doges.includes(rp.sticker.file_id)) {
@@ -1064,6 +1059,12 @@ bot.onText(_re("new doge"), msg=>{
                 }
             })
         }
+    }
+})
+
+bot.onText(_re("id"), msg=>{
+    if (msg.reply_to_message) {
+        msg.reply(msg.reply_to_message.from.id)
     }
 })
 
@@ -1116,3 +1117,127 @@ bot.onText(_re('nice song|music|bonita canción|música|good taste|buen gusto'),
         bot.forwardMessage(-1001127646272, msg.chat.id, rp.message_id)
     }
 })
+
+/* ***************PUSISHMENTS FOR UNO CHAT**************** */
+
+bot.onText(_re("\/?punishment"), msg=>{
+    const punishment = db.punishments[Math.floor(Math.random() * db.punishments.length)];
+    msg.reply(punishment)
+})
+
+bot.onText(_re("add punishment", "[\s\S]+"), msg=>{
+    if(db.punishers.includes(msg.from.id)) {
+        db.punishments.push(match[1])
+        fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
+            if (!e) {
+                msg.reply('New punishment added!')
+            } else {
+                console.log(e)
+            }
+        })
+    }
+})
+
+bot.onText(_re("add punishment"), msg=>{
+    if(db.punishers.includes(msg.from.id)) {
+        const rp = msg.reply_to_message
+        if(rp && rp.text) {
+            db.punishments.push(rp.text)
+            fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
+                if (!e) {
+                    msg.reply('New punishment added!')
+                } else {
+                    console.log(e)
+                }
+            })
+        }
+    }
+})
+
+bot.onText(_re("delete punishment", "[\s\S]+"), msg=>{
+    if(db.punishers.includes(msg.from.id)) {
+        db.punishments.splice(db.punishments[db.punishments.indexOf(match[1])], 1)
+        fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
+            if (!e) {
+                msg.reply('Punishment deleted.')
+            } else {
+                console.log(e)
+            }
+        })
+    }
+})
+
+bot.onText(_re("delete punishment"), msg=>{
+    if(db.punishers.includes(msg.from.id)) {
+        const rp = msg.reply_to_message
+        if(rp && rp.text) {
+            db.punishments.splice(db.punishments[db.punishments.indexOf(rp.text)], 1)
+            fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
+                if (!e) {
+                    msg.reply('Punishment deleted.')
+                } else {
+                    console.log(e)
+                }
+            })
+        }
+    }  
+})
+
+bot.onText(_re("add punisher", "[0-9]+"), msg=>{
+    if(msg.from.id === 237799109) {
+        db.punishers.push(match[1])
+        fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
+            if (!e) {
+                msg.reply('New punisher added!')
+            } else {
+                console.log(e)
+            }
+        })
+    }
+})
+
+bot.onText(_re("add punisher"), msg=>{
+    if(msg.from.id === 237799109) {
+        const rp = msg.reply_to_message
+        if(rp) {
+            db.punishers.push(rp.from.id)
+            fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
+                if (!e) {
+                    msg.reply('New punisher added!')
+                } else {
+                    console.log(e)
+                }
+            })
+        }
+    }
+})
+
+bot.onText(_re("delete punisher", "[0-9]+"), msg=>{
+    if(msg.from.id === 237799109) {
+        db.punishers.splice(db.punishers[db.punishers.indexOf(match[1])], 1)
+        fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
+            if (!e) {
+                msg.reply('Punisher deleted.')
+            } else {
+                console.log(e)
+            }
+        })
+    }
+})
+
+bot.onText(_re("delete punisher"), msg=>{
+    if(msg.from.id === 237799109) {
+        const rp = msg.reply_to_message
+        if(rp) {
+            db.punishers.splice(db.punishers[db.punishers.indexOf(rp.from.id)], 1)
+            fs.writeFile('shittydb', JSON.stringify(db, null, 2), function(e) {
+                if (!e) {
+                    msg.reply('Punisher deleted.')
+                } else {
+                    console.log(e)
+                }
+            })
+        }
+    }  
+})
+
