@@ -36,16 +36,17 @@
     "CAADAQADhwIAAmczbQqwzD9UQYhMuAI",
     "CAADAQADhQIAAmczbQqi-hv-aUNe2gI",
     "CAADAQAD2AIAAmczbQoO6VOTS8msMwI",
-    "CAADAgADfAADNraOCIgII5gvDQbsAg"
+    "CAADAgADfAADNraOCIgII5gvDQbsAg",
+    "CAADBAADBgUAAgOLqQQ8ZaLZJpOPBgI"
   ],
   "punishments": [
-    "Send face",
-    "Write name of winner on body",
     "Send vn, text decided by winner",
     "Fansign for winner",
     "Childhood pic",
     "Sing",
-    "Draw something, decided by winner"
+    "Draw something, decided by winner",
+    "Send face",
+    "Write name of winner on body"
   ],
   "punishers": [
     237799109
