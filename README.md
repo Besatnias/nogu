@@ -1,2 +1,0 @@
-# nogubot
-Nogu!

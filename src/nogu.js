@@ -1,11 +1,11 @@
-﻿'use strict';
+'use strict';
 
 // Bot modules
 const fs = require('fs'),
-    secrets = fs.readFileSync("secrets"),
+    secrets = fs.readFileSync("../data/secrets"),
     vars = JSON.parse(secrets),
-    db = JSON.parse(fs.readFileSync("shittydb")),
-    token = vars.telegram.bot.nogu,
+    db = JSON.parse(fs.readFileSync("../data/shittydb")),
+    token = vars.telegram.bot.orl,
     Tgfancy = require('tgfancy'),
     bot = new Tgfancy(token, { polling: true }),
 // HTTP modules
@@ -86,7 +86,6 @@ bot.on('message', msg=>{
 bot.on('message', msg => {
     if(msg.text && msg.text.match(/#([^\s]+)/g) && !msg.text.startsWith("\/") && msg.reply_to_message && msg.reply_to_message.sticker){
     addTags1(msg);}
-    shove(msg);
 });
 bot.onText(/^\/mtg(?:@(?:nogubot|mujabot|elmejorrobot))? (.+)/, (msg, match)=>{
     let searchArr = match[1].split(" ");
@@ -165,7 +164,7 @@ bot.onText(/^\/wik (\w{2})(\w{2}) (.+)/, (msg,match)=>{
             inline_keyboard: [[
                 {
                     text: "Desktop link",
-                    url: encodeURI(`https:\/\/${langB}.wikipedia.org\/wiki\/${targetName}`)
+                    url: encodeURI(`https://${langB}.wikipedia.org/wiki/${targetName}`)
                 },
                 {
                     text: "Mobile link",
@@ -316,64 +315,6 @@ function repite(msg) {
     bot.sendMessage(msg.chat.id, text, {parse_mode: 'markdown'});
 }
 
-function shove(msg) {
-    if (msg.text !== undefined)
-        console.log('FN: ' + msg.from.first_name + " " + "UN: @" + msg.from.username + ': ' + msg.text);
-    else if (msg.sticker) {
-        let sticker = msg.sticker.file_id;
-        console.log('FN: ' + msg.from.first_name + " " + "UN: @" + msg.from.username + ' Sticker: ' + sticker);
-        bot.sendSticker('-1001054003138}', sticker);
-    } else if (msg.photo || msg.document) {
-        let text = '', text2;
-        if (msg.chat.title !== undefined)
-            text += 'Sent by: ' + msg.from.first_name + ' ( @' + msg.from.username + ' )' + '\nChat: ' + msg.chat.title + ' (' + msg.chat.id + ')';
-        else
-            text += 'Sent by: ' + msg.from.first_name + ' ( @' + msg.from.username + ' )' + '\nPrivate message: ' + msg.chat.first_name + ' (' + msg.chat.id + ')';
-        if (msg.caption) {
-            text += '\nOriginal caption: ' + msg.caption;
-            if (text.length > 200)
-                text2 = text.substr(200);
-        }
-        if (msg.photo) {
-            console.log('FN: ' + msg.from.first_name + " " + "UN: @" + msg.from.username + ' sent a photo');
-            if (!text2) {
-                console.log('sending photo')
-                bot.sendPhoto('-1001073857418', msg.photo[0].file_id, {caption: text});
-            } else {
-                bot.sendPhoto('-1001073857418', msg.photo[0].file_id, {caption: text});
-                bot.sendMessage('-1001073857418', text2);
-            }
-        } else if (msg.document) {
-            console.log('FN: ' + msg.from.first_name + " " + "UN: @" + msg.from.username + ' sent a document');
-            if (!text2)
-                bot.sendDocument('-1001073997991', msg.document.file_id, {caption: text});
-            else {
-                bot.sendDocument('-1001073997991', msg.document.file_id, {caption: text});
-                bot.sendMessage('-1001073997991', text2);
-            }
-        }
-    }
-    if (msg.entities) {
-        if (msg.entities[0].type === "url") {
-            console.log('link here');
-            console.log('FN: ' + msg.from.first_name + " " + "UN: @" + msg.from.username + ' sent a url');
-            bot.forwardMessage(-1001095016888, msg.chat.id, msg.message_id);
-        }
-    } else if (msg.new_chat_participant) {
-        if (msg.new_chat_participant.id == 229219920) {
-            console.log('I was just added to a new group');
-            let text = '';
-            text += `I have joined a new group!\nChat ID: *${msg.chat.id}* \nChat title: *${msg.chat.title}* \nChat type:  *${msg.chat.type}*`;
-            if (msg.chat.username) {
-                text += `\nPublic chat username: @${msg.chat.username}`;
-            }
-            console.log(text);
-            bot.sendMessage(237799109, text, {parse_mode: "Markdown"});
-            bot.sendMessage(74277920, text, {parse_mode: "Markdown"});
-        }
-    }
-}
-
 // KICK & BAN
 
 function kick(msg) {
@@ -488,25 +429,17 @@ function round (num) {
     return rounded
 }
 
-function dt(){
-    return rp('https://s3.amazonaws.com/dolartoday/data.json').then(res=>{
-        return JSON.parse(res)
-    })
-}
+const dt = () =>
+    rp('https://s3.amazonaws.com/dolartoday/data.json')
+        .then(JSON.parse);
 
-bot.onText(/^\/dolar(?:@(?:nogubot|mujabot|elmejorrobot))?$/i, msg=>{
-    dt().then(res=>{
-        const dtusd = res.USD.dolartoday
-        bot.sendMessage(msg.chat.id, `$1 = Bs. ${dtusd}`)
-    })
-})
+bot.onText(/^\/dolar(?:@(?:nogubot|mujabot|elmejorrobot))?$/i, msg=>
+    dt().then(res=>
+        bot.sendMessage(msg.chat.id, `$1 = Bs. ${res.USD.dolartoday}`)))
 
-bot.onText(/^\/euro(?:@(?:nogubot|mujabot|elmejorrobot))?$/i, msg=>{
-    dt().then(res=>{
-        const dteur = res.EUR.dolartoday
-        bot.sendMessage(msg.chat.id, `€1 = Bs. ${dteur}`)
-    })
-})
+bot.onText(/^\/euro(?:@(?:nogubot|mujabot|elmejorrobot))?$/i, msg=>
+    dt().then(res=>
+        bot.sendMessage(msg.chat.id, `€1 = Bs. ${res.EUR.dolartoday}`)))
 
 bot.onText(/^\/dolar(?:@(?:nogubot|mujabot|elmejorrobot))? ([0-9.]+)/i, (msg, match)=>{
     if (Number(match[1]) !== NaN) {
@@ -788,10 +721,10 @@ function sendUrl(chatId, url) {
 bot.onText(/^\/math(?:@(?:nogubot|mujabot|elmejorrobot))? ([\s\S]+)/i, (msg, match)=>{
     const result = math.eval(match[1])
     const text = `Operation:
-<code>${match[1]}<\/code>
+<code>${match[1]}</code>
 
 Result:
-<code>${result}<\/code>`
+<code>${result}</code>`
     bot.sendMessage(msg.chat.id, text, {parse_mode: "HTML"})
 })
 
@@ -948,7 +881,7 @@ function _re(reText, ...args) {
 
 const ytre = /youtu(?:\.be|be\.com)\/(?:.*v(?:\/|=)|(?:.*\/)?)([\w'-]+)/i
 
-bot.onText(_re("\/audio"), msg=>{
+bot.onText(_re("/audio"), msg=>{
     const replied = msg.reply_to_message
     if (replied) {
         if (ytre.test(replied.text)) {

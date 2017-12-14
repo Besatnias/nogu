@@ -1,10 +1,4 @@
-# Default
-
-logs
-*.log
-npm-debug.log*
 node_modules
-.npm
-
-# Personal
-secrets
+secrets/
+package-lock.json
+not in use
